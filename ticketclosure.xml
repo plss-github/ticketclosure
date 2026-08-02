@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <name>Ticket Closure</name>
+  <key>ticketclosure</key>
+  <state>alpha</state>
+  <description>
+    <short>
+        <en>Auto-approves solutions and closes tickets for configured ITIL categories</en>
+        <pt>Aprova automaticamente as soluções e fecha chamados de categorias ITIL configuradas</pt>
+    </short>
+    <long>
+      <pt>
+        O plugin Ticket Closure permite configurar categorias ITIL específicas para as
+        quais, ao receber uma solução, o chamado pula a etapa de aprovação pelo
+        solicitante e é fechado automaticamente.
+      </pt>
+      <en>
+        The Ticket Closure plugin allows configuring specific ITIL categories for which,
+        upon receiving a solution, the ticket skips the requester approval step and is
+        closed automatically.
+      </en>
+    </long>
+  </description>
+  <homepage>https://github.com/plss-github/ticketclosure</homepage>
+  <download>https://github.com/plss-github/ticketclosure/releases</download>
+  <issues>https://github.com/plss-github/ticketclosure/issues</issues>
+  <readme>https://github.com/plss-github/ticketclosure</readme>
+  <authors>
+    <author>Ampris</author>
+  </authors>
+  <versions>
+    <version>
+      <num>1.0.0</num>
+      <compatibility>~10.0.0</compatibility>
+      <compatibility>~11.0.0</compatibility>
+      <download_url>https://github.com/plss-github/ticketclosure/releases/download/1.0.0/ticketclosure.tar.gz</download_url>
+    </version>
+  </versions>
+  <langs>
+    <lang>en_GB</lang>
+    <lang>en_US</lang>
+    <lang>pt_BR</lang>
+  </langs>
+  <license>GPL v2+</license>
+  <tags>
+    <en>
+        <tag>auto approval</tag>
+        <tag>ticket closure</tag>
+    </en>
+    <pt>
+        <tag>aprovação automática</tag>
+        <tag>fechamento de chamado</tag>
+    </pt>
+  </tags>
+</root>
