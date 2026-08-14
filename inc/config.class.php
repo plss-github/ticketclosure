@@ -107,5 +107,31 @@ class PluginTicketclosureConfig extends CommonGLPI {
     echo "</td></tr>";
     echo "</table>";
     Html::closeForm();
+
+    self::showDiagnosticShortcut();
+  }
+
+  /**
+   * Atalho para o diagnóstico e as últimas decisões do hook.
+   *
+   * Fica aqui porque quem configura as categorias é quem precisa saber por que um
+   * chamado não fechou -- e normalmente não tem acesso ao servidor para ler o log.
+   */
+  static private function showDiagnosticShortcut(): void {
+    $url = Plugin::getWebDir('ticketclosure') . '/front/diagnose.php';
+
+    echo "<table class='tab_cadre_fixe'>";
+    echo "<tr class='tab_bg_1'><th>" . __('Diagnóstico', 'ticketclosure') . "</th></tr>";
+
+    echo "<tr class='tab_bg_1'><td>";
+    echo "<a class='btn btn-secondary' href='$url'><i class='ti ti-stethoscope'></i> "
+      . __('Diagnosticar um chamado que não fechou', 'ticketclosure') . "</a>";
+    echo "</td></tr>";
+
+    foreach (PluginTicketclosureDiagnostic::logTail(5) as $line) {
+      echo "<tr class='tab_bg_1'><td><code>" . htmlspecialchars($line) . "</code></td></tr>";
+    }
+
+    echo "</table>";
   }
 }

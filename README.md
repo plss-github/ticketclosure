@@ -56,6 +56,56 @@ The plugin hooks into `item_add` for `ITILSolution`, which fires right after GLP
 
 ---
 
+## Troubleshooting
+
+The plugin runs inside a hook, with no screen of its own, so it writes one line per
+solution to `<GLPI_LOG_DIR>/ticketclosure.log` (usually `files/_log/ticketclosure.log`,
+or `/var/glpi/logs/` on the official Docker image) saying what it decided:
+
+```
+chamado 4: fechado automaticamente (categoria 3)
+chamado 3: categoria 12 fora da lista [3, 7]
+chamado 5: FALHOU ao fechar -- status continuou 5, esperado 6 -- mensagens na fila: ...
+```
+
+The `FALHOU` line is the interesting one. Closing a ticket goes through GLPI's whole
+update pipeline — ticket template, business rules, and the `pre_item_update` hook of
+every active plugin — and any of them may drop `status` from the input while the
+update still reports success. Behaviours (`is_ticketrealtime_mandatory`,
+`is_ticketsolutiontype_mandatory`, `is_tickettech_mandatory`, `is_tickettasktodo`, …)
+does exactly that. The queued messages appended to the log line name the culprit.
+
+To inspect a ticket that should have been closed, open the diagnostic screen — the
+button sits right under the category list in **Setup → General → Ticket Closure**, or
+go straight to `<glpi>/plugins/ticketclosure/front/diagnose.php`. It needs no server
+access, only the `config` update right.
+
+It reports whether the plugin is active and hooked, the raw stored configuration, the
+ticket's category and whether it matches, the solution's approval status, which other
+plugins listen to `pre_item_update` on `Ticket`, and the plugin's last decisions.
+**Try to close now** runs the hook's exact update on that ticket and shows what the
+pipeline answered.
+
+The solution's approval status tells the two failure modes apart:
+
+| Solution shows | Meaning |
+|---|---|
+| *Accepted* | the plugin ran; only `status` was dropped → something in the update pipeline |
+| *Waiting for approval* | the plugin never acted on this ticket → configuration or category |
+
+The same diagnostic is available from the command line when there is shell access:
+
+```bash
+cd <glpi>                                                      # the GLPI root
+php plugins/ticketclosure/tools/diagnose.php 2083969           # read-only
+php plugins/ticketclosure/tools/diagnose.php 2083969 --fechar  # actually try to close it
+```
+
+Add `--usuario-id=N` to run as the user who submitted the solution instead of the
+super-admin, which reproduces any rights-related restriction.
+
+---
+
 ## Author
 
 - Ampris
